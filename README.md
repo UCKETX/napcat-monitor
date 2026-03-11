@@ -33,7 +33,7 @@
 创建 `.env` 文件：
 
 ```bash
-# Napcat 配置
+# Napcat HTTP 客户端配置
 NAPCAT_URL=http://192.168.1.100:23236
 ACCOUNT_API=/get_status
 API_TOKEN=
@@ -55,7 +55,7 @@ FAIL_THRESHOLD=3
 
 | 配置项 | 说明 | 示例 |
 |--------|------|------|
-| `NAPCAT_URL` | Napcat 服务地址 | `http://192.168.1.100:23236` |
+| `NAPCAT_URL` | Napcat HTTP 客户端地址 | `http://192.168.1.100:23236` |
 | `ACCOUNT_API` | 账号状态检测 API | `/get_status` |
 | `API_TOKEN` | API 认证 Token（可选） | - |
 | `SMTP_SERVER` | SMTP 服务器 | `smtp.qq.com` |
