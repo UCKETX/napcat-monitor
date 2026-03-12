@@ -48,6 +48,7 @@ var (
 	config              Config
 	consecutiveFailures int
 	wasOffline          bool
+	offlineAlertSent    bool // 标记是否已发送过掉线邮件，避免重复发送
 )
 
 func loadConfig() error {
@@ -247,6 +248,7 @@ func main() {
 				fmt.Printf("[%s] 账号已恢复在线！\n", currentTime)
 				go sendEmail("✅ Napcat 账号已恢复！", fmt.Sprintf("检测时间: %s\n账号已重新上线。", currentTime))
 				wasOffline = false
+				offlineAlertSent = false // 重置标志，允许下次掉线时再次发送告警
 			}
 			consecutiveFailures = 0
 		} else {
@@ -254,8 +256,10 @@ func main() {
 			wasOffline = true
 			fmt.Printf("[%s] 账号离线 (%d/%d)\n", currentTime, consecutiveFailures, config.FAIL_THRESHOLD)
 
-			if consecutiveFailures >= config.FAIL_THRESHOLD {
+			// 只在达到阈值且尚未发送过掉线邮件时发送
+			if consecutiveFailures >= config.FAIL_THRESHOLD && !offlineAlertSent {
 				go sendEmail("⚠️ Napcat 账号已掉线！", fmt.Sprintf("检测时间: %s\n检测结果: %s", currentTime, statusMsg))
+				offlineAlertSent = true // 标记已发送，避免重复
 				fmt.Printf("[%s] 已发送掉线告警\n", currentTime)
 			}
 		}
